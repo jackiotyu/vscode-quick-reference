@@ -1,6 +1,6 @@
 {
   "name": "quick-reference",
-  "displayName": "quick-reference",
+  "displayName": "备忘清单(Quick Reference)",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -15,11 +15,11 @@
     "commands": [
       {
         "command": "QuickReference.open",
-        "title": "Open QuickReference 📚"
+        "title": "打开备忘清单(Quick Reference)📚"
       },
       {
         "command": "QuickReference.search",
-        "title": "Search in QuickReference 🔍"
+        "title": "搜索备忘清单(Quick Reference)🔍"
       }
     ]
   },

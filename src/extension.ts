@@ -38,7 +38,7 @@ class Panel {
     ) {
         this.panel = vscode.window.createWebviewPanel(
             Panel.id,
-            title ? `Quick Reference - ${title}` : 'Quick Reference',
+            title ? `备忘清单 - ${title}` : '备忘清单',
             {
                 viewColumn: vscode.ViewColumn.One,
                 preserveFocus: true,
@@ -128,7 +128,7 @@ let panelManger: PanelManager;
 
 const pickItems = (list: RefData[] | Section[], title = '') => {
     const picker = vscode.window.createQuickPick<PickItem>();
-    picker.title = `搜索备忘内容${title}`;
+    picker.title = `搜索备忘清单${title}`;
     picker.canSelectMany = false;
     picker.matchOnDetail = true;
     picker.show();
