@@ -1,0 +1,58 @@
+{
+  "name": "quick-reference",
+  "displayName": "quick-reference",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "QuickReference.open",
+        "title": "Open QuickReference 📚"
+      },
+      {
+        "command": "QuickReference.search",
+        "title": "Search in QuickReference 🔍"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "build:main": "webpack --mode production --devtool hidden-source-map",
+    "build:ref": "pnpm -C ./packages/reference/ build -o ../../dist/reference",
+    "package": "concurrently \"pnpm:build:main\" \"pnpm:build:ref\"",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.60.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@vscode/test-cli": "^0.0.6",
+    "@vscode/test-electron": "^2.3.9",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "express": "^4.18.3"
+  }
+}

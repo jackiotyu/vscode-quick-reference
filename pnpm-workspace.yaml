@@ -1,0 +1,3 @@
+packages:
+  # packages下所有的子包
+  - 'packages/*'
