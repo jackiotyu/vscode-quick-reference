@@ -2,7 +2,7 @@
   "name": "quick-reference",
   "publisher": "jackiotyu",
   "displayName": "备忘清单(Quick Reference)",
-  "description": "",
+  "description": "为开发人员分享快速参考备忘清单(速查表)🚀",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.60.0"
@@ -24,13 +24,59 @@
     "commands": [
       {
         "command": "QuickReference.open",
-        "title": "打开备忘清单(Quick Reference)📚"
+        "title": "打开备忘清单(Open Quick Reference)📚"
       },
       {
         "command": "QuickReference.search",
-        "title": "搜索备忘清单(Quick Reference)🔍"
+        "title": "搜索备忘清单(Search in Quick Reference)🔍"
+      },
+      {
+        "command": "QuickReference.openTreeItem",
+        "title": "打开备忘清单",
+        "icon": "$(open-preview)"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "QuickReference",
+          "icon": "images/icon-tree.svg",
+          "title": "备忘清单(Quick Reference)"
+        }
+      ]
+    },
+    "views": {
+      "QuickReference": [
+        {
+          "id": "QuickReference.list",
+          "name": "备忘清单",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "QuickReference.search",
+          "group": "QuickReference"
+        },
+        {
+          "command": "QuickReference.open",
+          "group": "QuickReference"
+        },
+        {
+          "command": "QuickReference.openTreeItem",
+          "when": "false"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "QuickReference.openTreeItem",
+          "when": "view === QuickReference.list && viewItem == QuickReference.treeItem.ref",
+          "group": "inline@10"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
