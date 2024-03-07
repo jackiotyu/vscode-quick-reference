@@ -18,7 +18,7 @@ export const pickItems = (list: RefData[] | Section[], title = '') => {
                 detail: item.intro,
                 path: item.path,
                 buttons: [searchDetailBtn],
-                list: item.sections.map((row) => ({ ...row, path: item.path })),
+                list: item.sections,
             };
         }
         : (item: Section) => {
