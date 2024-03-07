@@ -6,7 +6,7 @@
 - `打开备忘清单(Open Quick Reference)📚`
 - `搜索备忘清单(Search in Quick Reference)🔍`
 
-![预览](images/preview.png)
+![预览](https://cdn.jsdelivr.net/gh/jackiotyu/vscode-quick-reference@0.0.1/images/preview.png)
 
 ## 原始仓库
 [reference](https://github.com/jaywcjlove/reference)
