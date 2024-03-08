@@ -18,6 +18,9 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand(Commands.openTreeItem, (item: RefItem) => {
             panelManger.create(item.path, item.name);
         }),
+        vscode.commands.registerCommand(Commands.openSettings, () => {
+            void vscode.commands.executeCommand('workbench.action.openSettings', `@ext:jackiotyu.quick-reference`);
+        }),
         vscode.commands.registerCommand(Commands.search, async () => {
             const [list, flattenList] = await Promise.all([RefDataCache.list, RefDataCache.flattenList]);
             pickItems(list, flattenList);

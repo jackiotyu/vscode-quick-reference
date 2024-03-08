@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 export const viewSectionBtn: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('list-tree'),
-    tooltip: '展示详细分类',
+    tooltip: '展示详细章节',
 };
 
 export const viewRefBtn: vscode.QuickInputButton = {

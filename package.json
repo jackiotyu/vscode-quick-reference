@@ -3,7 +3,7 @@
   "publisher": "jackiotyu",
   "displayName": "备忘清单(Quick Reference)",
   "description": "为开发人员分享快速参考备忘清单(速查表)🚀",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -22,6 +22,11 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "QuickReference.openSettings",
+        "title": "打开设置",
+        "icon": "$(settings-gear)"
+      },
       {
         "command": "QuickReference.open",
         "title": "打开备忘清单(Open Quick Reference)📚",
@@ -73,6 +78,11 @@
       ],
       "view/title": [
         {
+          "command": "QuickReference.openSettings",
+          "group": "navigation@8",
+          "when": "view === QuickReference.list"
+        },
+        {
           "command": "QuickReference.open",
           "group": "navigation@9",
           "when": "view === QuickReference.list"
@@ -90,10 +100,23 @@
           "group": "inline@10"
         }
       ]
-    }
+    },
+    "configuration": [
+      {
+        "title": "备忘清单(Quick Reference)",
+        "properties": {
+          "QuickReference.list.defaultOpenSections": {
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "搜索备忘清单时是否默认展示章节搜索"
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
+    "vsce:pack": "vsce package --no-dependencies",
     "compile": "webpack",
     "watch": "webpack --watch",
     "build:main": "webpack --mode production --devtool hidden-source-map",
