@@ -19,7 +19,8 @@ export function activate(context: vscode.ExtensionContext) {
             panelManger.create(item.path, item.name);
         }),
         vscode.commands.registerCommand(Commands.search, async () => {
-            pickItems(await RefDataCache.list);
+            const [list, flattenList] = await Promise.all([RefDataCache.list, RefDataCache.flattenList]);
+            pickItems(list, flattenList);
         }),
         vscode.commands.registerCommand(Commands.internalOpen, (path: string, title: string) => {
             panelManger.create(path, title);

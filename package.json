@@ -24,11 +24,13 @@
     "commands": [
       {
         "command": "QuickReference.open",
-        "title": "打开备忘清单(Open Quick Reference)📚"
+        "title": "打开备忘清单(Open Quick Reference)📚",
+        "icon": "$(open-preview)"
       },
       {
         "command": "QuickReference.search",
-        "title": "搜索备忘清单(Search in Quick Reference)🔍"
+        "title": "搜索备忘清单(Search in Quick Reference)🔍",
+        "icon": "$(search)"
       },
       {
         "command": "QuickReference.openTreeItem",
@@ -67,6 +69,18 @@
         {
           "command": "QuickReference.openTreeItem",
           "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "QuickReference.open",
+          "group": "navigation@9",
+          "when": "view === QuickReference.list"
+        },
+        {
+          "command": "QuickReference.search",
+          "group": "navigation@10",
+          "when": "view === QuickReference.list"
         }
       ],
       "view/item/context": [
