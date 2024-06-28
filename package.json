@@ -3,7 +3,7 @@
   "publisher": "jackiotyu",
   "displayName": "备忘清单(Quick Reference)",
   "description": "为开发人员分享快速参考备忘清单(速查表)🚀",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.60.0"
   },

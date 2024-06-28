@@ -3,6 +3,15 @@
 <!-- All notable changes to the "quick-reference" extension will be documented in this file. -->
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [0.0.4] - 2024-06-28
+
+- 同步 [reference](https://github.com/jaywcjlove/reference.git) 远程代码，版本34bf61c2
+
+### Added
+
+- 添加面板图标
+- 列表搜索添加打开章节搜索按钮
+
 ## [0.0.3] - 2024-03-08
 
 ### Added
