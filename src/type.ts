@@ -19,7 +19,19 @@ export interface PickItem extends vscode.QuickPickItem {
     list?: Section[];
 }
 
-export interface WebviewMsg {
-    method: 'changeTitle';
-    data: string;
+export interface WebviewOpenUrlMsg {
+    method: 'openUrl';
+    data: {
+        url: string;
+        title: string;
+    }
 }
+
+export interface WebviewChangeTitleMsg {
+    method: 'changeTitle';
+    data: {
+        title: string;
+    }
+}
+
+export type WebviewMsg = WebviewOpenUrlMsg | WebviewChangeTitleMsg;
