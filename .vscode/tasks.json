@@ -15,7 +15,10 @@
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"dependsOn": [
+				"npm: build:extractGroup"
+			]
 		},
 		{
 			"type": "npm",
@@ -32,7 +35,7 @@
 			"label": "tasks: watch-tests",
 			"dependsOn": [
 				"npm: watch",
-				"npm: watch-tests"
+				"npm: watch-tests",
 			],
 			"problemMatcher": []
 		}

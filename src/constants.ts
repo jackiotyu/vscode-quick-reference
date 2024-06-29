@@ -13,6 +13,7 @@ export enum TreeViewId {
 }
 
 export enum TreeItemId {
+    group = `${APP_NAME}.treeItem.group`,
     ref = `${APP_NAME}.treeItem.ref`,
     section = `${APP_NAME}.treeItem.section`,
 }

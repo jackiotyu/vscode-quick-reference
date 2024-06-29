@@ -1,5 +1,10 @@
 import * as vscode from 'vscode';
 
+export interface Group {
+    title: string;
+    items: Array<RefData>;
+}
+
 export interface Section {
     a: string;
     t: string;
@@ -25,19 +30,19 @@ export interface WebviewOpenUrlMsg {
         url: string;
         title: string;
         hash?: string;
-    }
+    };
 }
 
 export interface WebviewChangeTitleMsg {
     method: 'changeTitle';
     data: {
         title: string;
-    }
+    };
 }
 
 export interface WebviewGetHashMsg {
     method: 'getHash';
-    data?: {}
+    data?: {};
 }
 
 export type WebviewMsg = WebviewOpenUrlMsg | WebviewChangeTitleMsg | WebviewGetHashMsg;

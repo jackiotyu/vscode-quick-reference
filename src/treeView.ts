@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { RefDataCache } from '@/utils';
 import { TreeViewId, TreeItemId, Commands } from '@/constants';
-import { Section, RefData } from '@/type';
+import { Section, RefData, Group } from '@/type';
 
 export class RefItem extends vscode.TreeItem {
     items: Section[];
@@ -31,15 +31,23 @@ class SectionItem extends vscode.TreeItem {
         this.command = {
             command: Commands.internalOpen,
             title: '打开清单',
-            arguments: [
-                this.path,
-                this.refName,
-            ]
+            arguments: [this.path, this.refName],
         };
     }
 }
 
-type ListItemNode = RefItem | SectionItem;
+class GroupItem extends vscode.TreeItem {
+    readonly type = TreeItemId.group;
+    iconPath = new vscode.ThemeIcon('book');
+    constructor(
+        name: string,
+        public readonly items: RefData[],
+    ) {
+        super(name, vscode.TreeItemCollapsibleState.Collapsed);
+    }
+}
+
+type ListItemNode = RefItem | SectionItem | GroupItem;
 
 export class ListTreeView implements vscode.TreeDataProvider<ListItemNode> {
     static id = TreeViewId.list;
@@ -48,8 +56,11 @@ export class ListTreeView implements vscode.TreeDataProvider<ListItemNode> {
     }
     async getChildren(element?: ListItemNode | undefined): Promise<ListItemNode[]> {
         if (!element) {
-            let list = await RefDataCache.list;
-            return list.map((item) => new RefItem(item));
+            let group = await RefDataCache.group;
+            return group.map((item) => new GroupItem(item.title, item.items));
+        }
+        if (element.type === TreeItemId.group) {
+            return element.items.map((item) => new RefItem(item));
         }
         if (element.type === TreeItemId.ref) {
             return element.items.map((item) => new SectionItem(item));
