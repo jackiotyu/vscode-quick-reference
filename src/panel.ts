@@ -41,7 +41,8 @@ class Panel {
                     return;
             }
         });
-        this.panel.webview.html = this.getHtmlContent(docPath || 'index.html');
+        const [baseUrl, hash] = docPath.split('#');
+        this.panel.webview.html = this.getHtmlContent(baseUrl || 'index.html');
     }
     private getHtmlContent(docPath: string) {
         const filepath = path.join(this.context.extensionPath, "dist/reference", docPath);
