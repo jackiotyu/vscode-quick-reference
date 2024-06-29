@@ -24,6 +24,7 @@ export interface WebviewOpenUrlMsg {
     data: {
         url: string;
         title: string;
+        hash?: string;
     }
 }
 
@@ -34,4 +35,9 @@ export interface WebviewChangeTitleMsg {
     }
 }
 
-export type WebviewMsg = WebviewOpenUrlMsg | WebviewChangeTitleMsg;
+export interface WebviewGetHashMsg {
+    method: 'getHash';
+    data?: {}
+}
+
+export type WebviewMsg = WebviewOpenUrlMsg | WebviewChangeTitleMsg | WebviewGetHashMsg;

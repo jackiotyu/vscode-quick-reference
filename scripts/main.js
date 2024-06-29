@@ -3,20 +3,30 @@ const vscode = acquireVsCodeApi();
 /** ==========anchor============== */
 if ('onhashchange' in window && (typeof document.documentMode === 'undefined' || document.documentMode === 8)) {
     window.addEventListener('hashchange', function () {
-        console.log('hashchange');
         anchorPoint();
         updateAnchor();
     });
-    window.addEventListener('popstate', function (event) {
-        console.log('History state changed:', event.state);
-    });
 }
+window.addEventListener('message', event => {
+    const { method, data } = event.data || {};
+    if(method === "getHash" && data.hash) {
+        window.location.hash = `#${data.hash}`;
+    }
+});
+document.addEventListener('DOMContentLoaded', () => {
+    vscode.postMessage({
+        method: 'getHash',
+        data: {},
+    });
+});
 function anchorPoint() {
     const hash = window.location.hash?.replace(/^#/, '') || '';
-    const elm = document.getElementById(decodeURIComponent(hash));
+    const elm = document.getElementById(hash);
     Array.from(document.querySelectorAll('.h2wrap-body .wrap')).forEach((elm) => elm.classList.remove('active'));
     if (elm?.tagName === 'H3') {
-        elm?.parentElement?.parentElement?.classList.add('active');
+        const parent = elm?.parentElement?.parentElement;
+        parent?.classList.add('active');
+        parent?.scrollIntoView(true);
     }
 }
 anchorPoint();
@@ -25,7 +35,7 @@ function updateAnchor(element) {
     anchorContainer.forEach((tocanchor) => {
         tocanchor.classList.remove('is-active-link');
     });
-    const anchor = element || document.querySelector(`a.tocs-link[href='${decodeURIComponent(window.location.hash)}']`);
+    const anchor = element || document.querySelector(`a.tocs-link[href='${window.location.hash}']`);
     if (anchor) {
         anchor.classList.add('is-active-link');
     }
@@ -36,6 +46,7 @@ const anchorAll = document.querySelectorAll('.menu-tocs .menu-modal a.tocs-link'
 anchorAll.forEach((item) => {
     item.addEventListener('click', (e) => {
         updateAnchor();
+        window.location.hash = e.target.hash;
     });
 });
 
@@ -70,6 +81,7 @@ function handleOpenUrl(event) {
         data: {
             url: target.dataset.href,
             title: target.dataset.title,
+            hash: target.dataset.hash,
         },
     });
 }
@@ -195,7 +207,6 @@ function searchSectionsResult(idx = 0) {
         data.item.sections.forEach((item, idx) => {
             const label = item.t.replace(getValueReg(inputValue), (txt) => `<mark>${txt}</mark>`);
             const href = data.item.path;
-            console.log('href content', href);
             if (item.l < 3) {
                 sectionHTML += `<li><a href="#" data-href="${href}" data-title="${data.item.title}" data-hash="${item.a}" onclick="handleOpenUrl(event)">${label}</a><div>`;
             } else {

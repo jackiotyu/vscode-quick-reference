@@ -7,19 +7,16 @@ import { Commands } from './constants';
 class Panel {
     private panel: vscode.WebviewPanel;
     static id = 'QuickReferencePanel';
+    private hash: string;
     constructor(
         private context: vscode.ExtensionContext,
         docPath: string = '',
         title?: string,
     ) {
-        this.panel = vscode.window.createWebviewPanel(
-            Panel.id,
-            title ? `备忘清单 - ${title}` : '备忘清单',
-            {
-                viewColumn: vscode.ViewColumn.One,
-                preserveFocus: true,
-            },
-        );
+        this.panel = vscode.window.createWebviewPanel(Panel.id, title ? `备忘清单 - ${title}` : '备忘清单', {
+            viewColumn: vscode.ViewColumn.One,
+            preserveFocus: true,
+        });
         this.panel.webview.options = {
             enableScripts: true,
             enableCommandUris: true,
@@ -29,29 +26,37 @@ class Panel {
             ],
         };
         this.panel.iconPath = vscode.Uri.joinPath(context.extensionUri, 'images', 'icon.svg');
+        const [baseUrl, hash] = docPath.split('#');
+        this.hash = hash;
         this.panel.webview.onDidReceiveMessage((event: WebviewMsg) => {
             console.log('onDidReceiveMessage', event);
             switch (event.method) {
                 case 'openUrl':
-                    vscode.commands.executeCommand(Commands.internalOpen, event.data.url, event.data.title);
+                    vscode.commands.executeCommand(
+                        Commands.internalOpen,
+                        `${event.data.url}${event.data.hash || ''}`,
+                        `${event.data.title}`,
+                    );
                     return;
                 // TODO 修改标题
                 case 'changeTitle':
                     this.panel.title = event.data.title;
                     return;
+                case 'getHash':
+                    this.panel.webview.postMessage({ method: 'getHash', data: { hash: this.hash } });
+                    return;
             }
         });
-        const [baseUrl, hash] = docPath.split('#');
         this.panel.webview.html = this.getHtmlContent(baseUrl || 'index.html');
     }
     private getHtmlContent(docPath: string) {
-        const filepath = path.join(this.context.extensionPath, "dist/reference", docPath);
+        const filepath = path.join(this.context.extensionPath, 'dist/reference', docPath);
         const dirPath = path.dirname(filepath);
-        const html = fs.readFileSync(filepath, "utf8");
+        const html = fs.readFileSync(filepath, 'utf8');
         return this.updateHtmlForWebview(html, this.panel.webview, dirPath);
     }
     private updateHtmlForWebview(html: string, webview: vscode.Webview, baseDir: string) {
-        html = html.replace(/id="([^"]*[\u4E00-\u9FA5]+[^"]*)"/g, function(match, p1) {
+        html = html.replace(/id="([^"]*[\u4E00-\u9FA5]+[^"]*)"/g, function (match, p1) {
             const encodedId = encodeURIComponent(p1);
             return `id="${encodedId}"`;
         });
@@ -90,16 +95,18 @@ class Panel {
             if (href.startsWith('http') || href.startsWith('https')) {
                 return match;
             }
-            if(href.startsWith('javascript:')){
+            if (href.startsWith('javascript:')) {
                 return match;
             }
             if (href.startsWith('#')) {
                 const formated = `${text}#${encodeURIComponent(href.slice(1))}"`;
                 return formated;
             }
-            if(href.startsWith('../index.html')) href = "index.html";
+            if (href.startsWith('../index.html')) href = 'index.html';
             const cleanHref = href.split('?')[0];
-            const commandUri = vscode.Uri.parse(`command:${Commands.internalOpen}?${encodeURIComponent(JSON.stringify([cleanHref,'']))}`);
+            const commandUri = vscode.Uri.parse(
+                `command:${Commands.internalOpen}?${encodeURIComponent(JSON.stringify([cleanHref, '']))}`,
+            );
             return `${text + commandUri}"`;
         });
         return html;
