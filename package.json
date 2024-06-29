@@ -1,14 +1,22 @@
 {
   "name": "quick-reference",
   "publisher": "jackiotyu",
-  "displayName": "备忘清单(Quick Reference)",
-  "description": "为开发人员分享快速参考备忘清单(速查表)🚀",
+  "displayName": "备忘清单-开发者快速参考 (Reference)",
+  "description": "Reference 是一组由开源社区贡献的备忘单集合，为开发者提供了精美的布局和快速参考信息",
   "version": "0.0.4",
   "engines": {
     "vscode": "^1.60.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "Quick Reference",
+    "备忘清单",
+    "开发知识速查表",
+    "开发者参考",
+    "技术参考",
+    "开发者快速参考"
   ],
   "repository": {
     "type": "git",
@@ -29,12 +37,12 @@
       },
       {
         "command": "QuickReference.open",
-        "title": "打开备忘清单(Open Quick Reference)📚",
+        "title": "打开备忘清单(Open Reference)📚",
         "icon": "$(open-preview)"
       },
       {
         "command": "QuickReference.search",
-        "title": "搜索备忘清单(Search in Quick Reference)🔍",
+        "title": "搜索备忘清单(Search in Reference)🔍",
         "icon": "$(search)"
       },
       {
@@ -48,7 +56,7 @@
         {
           "id": "QuickReference",
           "icon": "images/icon-tree.svg",
-          "title": "备忘清单(Quick Reference)"
+          "title": "备忘清单(Reference)"
         }
       ]
     },
@@ -103,7 +111,7 @@
     },
     "configuration": [
       {
-        "title": "备忘清单(Quick Reference)",
+        "title": "备忘清单(Reference)",
         "properties": {
           "QuickReference.list.defaultOpenSections": {
             "type": "boolean",
