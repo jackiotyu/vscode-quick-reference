@@ -3,6 +3,10 @@
 <!-- All notable changes to the "quick-reference" extension will be documented in this file. -->
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [0.0.5] - 2024-06-29
+
+- 去除 express，使用内置 webviw
+
 ## [0.0.4] - 2024-06-28
 
 - 同步 [reference](https://github.com/jaywcjlove/reference.git) 远程代码，版本34bf61c2
