@@ -3,6 +3,10 @@
 <!-- All notable changes to the "quick-reference" extension will be documented in this file. -->
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [0.0.6] - 2024-06-29
+
+- 添加分类面板
+
 ## [0.0.5] - 2024-06-29
 
 - 去除 express，使用内置 webviw
