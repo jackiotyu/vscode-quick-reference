@@ -3,6 +3,10 @@
 <!-- All notable changes to the "quick-reference" extension will be documented in this file. -->
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [0.0.7] - 2024-06-30
+
+- 添加配置，默认只保留一个备忘清单视图
+
 ## [0.0.6] - 2024-06-29
 
 - 添加分类面板
