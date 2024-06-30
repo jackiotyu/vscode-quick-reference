@@ -28,8 +28,9 @@ function extractGroup() {
 
     // 正则表达式匹配##和<!--rehype:class=home-card-->之间的内容
     const regex = /##\s*(.+?)\n([\s\S]*?)<!--rehype:class=home-card-->/g;
-    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)<!--rehype:style=background:\s*(rgb\(\d+\s+\d+\s+\d+\));/g;
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)(<!--rehype:.*?-->)/g;
     const iconReg = /docs\/(.*?)\.md/;
+    const colorReg = /style=background:\s*(rgb\([^)]*\));/;
     const matches = [];
     let match;
     while ((match = regex.exec(data)) !== null) {
@@ -39,6 +40,7 @@ function extractGroup() {
         let linkMatch;
         const links = [];
         let iconMatch;
+        let colorMatch;
 
         while ((linkMatch = linkRegex.exec(content)) !== null) {
             links.push({
@@ -46,8 +48,9 @@ function extractGroup() {
                 link: linkMatch[2],
             });
             iconMatch = linkMatch[2].match(iconReg);
-            if (iconMatch) {
-                colorMap[iconMatch[1]] = linkMatch[3];
+            colorMatch = linkMatch[3].match(colorReg);
+            if (iconMatch && colorMatch) {
+                colorMap[iconMatch[1]] = colorMatch[1];
             }
         }
 
