@@ -92,9 +92,7 @@ class Panel {
         });
 
         html = html.replace(/<link[^>]*\s+rel="stylesheet"[^>]*\s+href="([^"]+)(\?[^"]*)?"/g, (match, href) => {
-            if (href.startsWith('http') || href.startsWith('https')) {
-                return match;
-            }
+            if (href.startsWith('http') || href.startsWith('https')) return match;
             const cleanHref = href.split('?')[0];
             const stylePathOnDisk = vscode.Uri.file(path.join(baseDir, cleanHref));
             const styleUri = webview.asWebviewUri(stylePathOnDisk);
@@ -102,9 +100,7 @@ class Panel {
         });
 
         html = html.replace(/<script[^>]*\s+src="([^"]+)(\?[^"]*)?"/g, (match, src) => {
-            if (src.startsWith('http') || src.startsWith('https')) {
-                return match;
-            }
+            if (src.startsWith('http') || src.startsWith('https')) return match;
             const cleanSrc = src.split('?')[0];
             const scriptPathOnDisk = vscode.Uri.file(path.join(baseDir, cleanSrc));
             const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
@@ -112,9 +108,7 @@ class Panel {
         });
 
         html = html.replace(/<img[^>]*\s+src="([^"]+)(\?[^"]*)?"/g, (match, src) => {
-            if (src.startsWith('http') || src.startsWith('https')) {
-                return match;
-            }
+            if (src.startsWith('http') || src.startsWith('https')) return match;
             const cleanSrc = src.split('?')[0];
             const imgPathOnDisk = vscode.Uri.file(path.join(baseDir, cleanSrc));
             const imgUri = webview.asWebviewUri(imgPathOnDisk);
@@ -122,18 +116,14 @@ class Panel {
         });
 
         html = html.replace(/(<a[^>]*\s+href=")([^"]+)(\?[^"]*)?"/g, (match, text, href, post) => {
-            if (href.startsWith('http') || href.startsWith('https')) {
-                return match;
-            }
-            if (href.startsWith('javascript:')) {
-                return match;
-            }
-            if (href.startsWith('#')) {
-                const formated = `${text}#${encodeURIComponent(href.slice(1))}"`;
-                return formated;
-            }
+            if (href.startsWith('http') || href.startsWith('https')) return match;
+            if (href.startsWith('javascript:')) return match;
+            if (href.startsWith('#')) return `${text}#${encodeURIComponent(href.slice(1))}"`;
             if (href.startsWith('../index.html')) href = 'index.html';
-            const cleanHref = href.split('?')[0];
+            let cleanHref = href.split('?')[0];
+            if(cleanHref.startsWith('./') && !cleanHref.includes('/docs/')) {
+                cleanHref = path.join('docs', cleanHref);
+            }
             const commandUri = vscode.Uri.parse(
                 `command:${Commands.internalOpen}?${encodeURIComponent(JSON.stringify([cleanHref, '']))}`,
             );
