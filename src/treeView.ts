@@ -28,6 +28,7 @@ class SectionItem extends vscode.TreeItem {
         super(data.t);
         this.path = data.path;
         this.refName = data.refName;
+        this.tooltip = '点击打开';
         this.command = {
             command: Commands.internalOpen,
             title: '打开清单',
@@ -40,10 +41,19 @@ class GroupItem extends vscode.TreeItem {
     readonly type = TreeItemId.group;
     iconPath = new vscode.ThemeIcon('book');
     constructor(
-        name: string,
+        private name: string,
         public readonly items: RefData[],
     ) {
         super(name, vscode.TreeItemCollapsibleState.Collapsed);
+        this.setTooltip();
+    }
+    private setTooltip() {
+        const tooltip = new vscode.MarkdownString("", true);
+        tooltip.appendMarkdown(`### ${this.name}\n\n`);
+        this.items.forEach(item => {
+            tooltip.appendMarkdown(`* $(tag) \`${item.name}\`\n`);
+        });
+        this.tooltip = tooltip;
     }
 }
 
