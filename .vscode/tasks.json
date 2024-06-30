@@ -17,7 +17,7 @@
 				"isDefault": true
 			},
 			"dependsOn": [
-				"npm: build:extractGroup"
+				"npm: build:extractData"
 			]
 		},
 		{

@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import { PickItem, RefData, Section } from '@/type';
-import { isRefData } from '@/utils';
+import { isRefData, IconsData } from '@/utils';
 import { viewSectionBtn, viewRefBtn } from '@/picker.button';
 import { Commands, APP_NAME, Config } from '@/constants';
 
 const mapFunc = (item: RefData | Section): PickItem => {
     if (isRefData(item)) {
         return {
-            iconPath: new vscode.ThemeIcon('tag'),
+            iconPath: IconsData.getIcon(item.icon),
             label: item.name,
             path: item.path,
             list: item.sections,

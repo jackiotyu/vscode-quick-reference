@@ -60,3 +60,17 @@ export class RefDataCache {
         return this._group;
     }
 }
+
+export class IconsData {
+    private static context: vscode.ExtensionContext;
+    static init(context: vscode.ExtensionContext) {
+        this.context = context;
+    }
+    static getIcon(icon: string, defaultIcon?: string) {
+        if (icon) {
+            return vscode.Uri.joinPath(this.context.extensionUri, 'icons', `${icon}.svg`);
+        }
+        if (defaultIcon) return new vscode.ThemeIcon(defaultIcon);
+        return vscode.Uri.joinPath(this.context.extensionUri, 'images', `list.svg`);
+    }
+}

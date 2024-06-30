@@ -17,6 +17,7 @@ export interface RefData {
     name: string;
     path: string;
     sections: Array<Section>;
+    icon: string;
 }
 
 export interface PickItem extends vscode.QuickPickItem {

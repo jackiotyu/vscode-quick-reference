@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { PanelManager } from '@/panel';
 import { pickItems } from '@/picker';
 import { Commands } from '@/constants';
-import { RefDataCache } from '@/utils';
+import { RefDataCache, IconsData } from '@/utils';
 import { ListTreeView, RefItem } from '@/treeView';
 
 let panelManger: PanelManager;
@@ -10,6 +10,7 @@ let panelManger: PanelManager;
 export function activate(context: vscode.ExtensionContext) {
     panelManger = new PanelManager(context);
     RefDataCache.init(context);
+    IconsData.init(context);
     vscode.window.registerTreeDataProvider(ListTreeView.id, new ListTreeView());
     context.subscriptions.push(
         vscode.commands.registerCommand(Commands.open, () => {

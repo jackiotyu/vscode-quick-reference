@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { RefDataCache } from '@/utils';
+import { RefDataCache, IconsData } from '@/utils';
 import { TreeViewId, TreeItemId, Commands } from '@/constants';
 import { Section, RefData, Group } from '@/type';
 
@@ -8,7 +8,6 @@ export class RefItem extends vscode.TreeItem {
     path: string;
     name: string;
     readonly type = TreeItemId.ref;
-    iconPath = new vscode.ThemeIcon('tag');
     constructor(data: RefData) {
         super(data.name, vscode.TreeItemCollapsibleState.Collapsed);
         this.items = data.sections;
@@ -16,6 +15,7 @@ export class RefItem extends vscode.TreeItem {
         this.path = data.path;
         this.name = data.name;
         this.contextValue = TreeItemId.ref;
+        this.iconPath = IconsData.getIcon(data.icon);
     }
 }
 
