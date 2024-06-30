@@ -59,6 +59,9 @@ class Panel {
     public get alive() {
         return this._alive;
     }
+    public reveal() {
+        this.panel.reveal();
+    }
     public update(docPath: string, title: string = '') {
         const [baseUrl = '', hash = ''] = docPath.split('#');
         const changeHash = baseUrl === this.baseUrl && hash !== this.hash;
@@ -150,6 +153,7 @@ export class PanelManager {
         const keepOne = vscode.workspace.getConfiguration(APP_NAME).get<boolean>(Config.webivewKeepOne, false);
         if (keepOne && this.lastPanel && this.lastPanel.alive) {
             this.lastPanel.update(docPath, title);
+            this.lastPanel.reveal();
             return;
         }
         this.lastPanel = new Panel(this.context, docPath, title);
