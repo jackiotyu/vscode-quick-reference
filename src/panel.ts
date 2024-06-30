@@ -44,7 +44,7 @@ class Panel {
                     this.panel.title = event.data.title;
                     return;
                 case 'getHash':
-                    this.panel.webview.postMessage({ method: 'getHash', data: { hash: this.hash } });
+                    this.panel.webview.postMessage({ method: 'updateHash', data: { hash: this.hash } });
                     return;
             }
         });
@@ -67,7 +67,7 @@ class Panel {
         this.panel.title = title ? `备忘清单 - ${title}` : '备忘清单';
         !title && this.changeTitleByDocPath(baseUrl);
         if (changeHash) {
-            this.panel.webview.postMessage({ method: 'getHash', data: { hash: this.hash } });
+            this.panel.webview.postMessage({ method: 'updateHash', data: { hash: this.hash } });
         } else {
             this.panel.webview.html = this.getHtmlContent(baseUrl || 'index.html');
         }

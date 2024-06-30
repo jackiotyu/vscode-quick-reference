@@ -9,8 +9,9 @@ if ('onhashchange' in window && (typeof document.documentMode === 'undefined' ||
 }
 window.addEventListener('message', event => {
     const { method, data } = event.data || {};
-    if(method === "getHash" && data.hash) {
-        window.location.hash = `#${data.hash}`;
+    if(method === "updateHash") {
+        if(data.hash) window.location.hash = `#${data.hash}`;
+        else window.scrollTo(0, 0);
     }
 });
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,7 +44,8 @@ function updateAnchor(element) {
 // toc 定位
 updateAnchor();
 const anchorAll = document.querySelectorAll('.menu-tocs .menu-modal a.tocs-link');
-anchorAll.forEach((item) => {
+const sectionAnchorAll = document.querySelectorAll(".h3wrap > h3 > a");
+[...anchorAll, ...sectionAnchorAll].forEach((item) => {
     item.addEventListener('click', (e) => {
         updateAnchor();
         window.location.hash = e.target.hash;
