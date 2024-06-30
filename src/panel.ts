@@ -2,12 +2,14 @@ import * as vscode from 'vscode';
 import { WebviewMsg } from '@/type';
 import fs from 'fs';
 import path from 'path';
-import { Commands } from './constants';
+import { Commands, Config, APP_NAME } from './constants';
 
 class Panel {
     private panel: vscode.WebviewPanel;
     static id = 'QuickReferencePanel';
-    private hash: string;
+    private hash: string = '';
+    private baseUrl: string = '';
+    private _alive = true;
     constructor(
         private context: vscode.ExtensionContext,
         docPath: string = '',
@@ -26,10 +28,7 @@ class Panel {
             ],
         };
         this.panel.iconPath = vscode.Uri.joinPath(context.extensionUri, 'images', 'icon.svg');
-        const [baseUrl, hash] = docPath.split('#');
-        this.hash = hash;
         this.panel.webview.onDidReceiveMessage((event: WebviewMsg) => {
-            console.log('onDidReceiveMessage', event);
             switch (event.method) {
                 case 'openUrl':
                     vscode.commands.executeCommand(
@@ -47,7 +46,25 @@ class Panel {
                     return;
             }
         });
-        this.panel.webview.html = this.getHtmlContent(baseUrl || 'index.html');
+        this.update(docPath, title);
+        this.panel.onDidDispose(() => {
+            this._alive = false;
+        });
+    }
+    public get alive() {
+        return this._alive;
+    }
+    public update(docPath: string, title: string = '') {
+        this.panel.title = title ? `备忘清单 - ${title}` : '备忘清单';
+        const [baseUrl, hash] = docPath.split('#');
+        const changeHash = baseUrl === this.baseUrl && hash !== this.hash;
+        this.hash = hash;
+        this.baseUrl = baseUrl;
+        if (changeHash) {
+            this.panel.webview.postMessage({ method: 'getHash', data: { hash: this.hash } });
+        } else {
+            this.panel.webview.html = this.getHtmlContent(baseUrl || 'index.html');
+        }
     }
     private getHtmlContent(docPath: string) {
         const filepath = path.join(this.context.extensionPath, 'dist/reference', docPath);
@@ -118,8 +135,14 @@ class Panel {
 
 export class PanelManager {
     constructor(private context: vscode.ExtensionContext) {}
+    lastPanel?: Panel;
     create(docPath: string = '', title?: string) {
-        new Panel(this.context, docPath, title);
+        const keepOne = vscode.workspace.getConfiguration(APP_NAME).get<boolean>(Config.webivewKeepOne, false);
+        if (keepOne && this.lastPanel && this.lastPanel.alive) {
+            this.lastPanel.update(docPath, title);
+            return;
+        }
+        this.lastPanel = new Panel(this.context, docPath, title);
     }
     dispose() {}
 }

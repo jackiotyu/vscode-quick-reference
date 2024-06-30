@@ -19,5 +19,6 @@ export enum TreeItemId {
 }
 
 export enum Config {
-    listDefaultOpenSections = 'list.defaultOpenSections'
+    listDefaultOpenSections = 'list.defaultOpenSections',
+    webivewKeepOne = 'webview.keepOne',
 }

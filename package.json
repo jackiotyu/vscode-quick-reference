@@ -117,6 +117,11 @@
             "type": "boolean",
             "default": false,
             "markdownDescription": "搜索备忘清单时是否默认展示章节搜索"
+          },
+          "QuickReference.webview.keepOne": {
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "只保留一个备忘清单视图"
           }
         }
       }
