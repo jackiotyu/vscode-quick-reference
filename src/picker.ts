@@ -11,6 +11,7 @@ const mapFunc = (item: RefData | Section): PickItem => {
             label: item.name,
             path: item.path,
             list: item.sections,
+            name: item.name,
         };
     } else {
         return {
@@ -18,6 +19,7 @@ const mapFunc = (item: RefData | Section): PickItem => {
             label: item.t,
             description: item.refName,
             path: item.path,
+            name: item.refName,
         };
     }
 };
@@ -53,7 +55,7 @@ export const pickItems = (list: RefData[] | Section[], flattenList: (RefData | S
         picker.dispose();
         const item = picker.selectedItems[0];
         if (item) {
-            const label = title ? title : item.label;
+            const label = title ? title : item.name;
             vscode.commands.executeCommand(Commands.internalOpen, item.path, label);
         }
     });

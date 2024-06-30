@@ -20,6 +20,7 @@ export interface RefData {
 }
 
 export interface PickItem extends vscode.QuickPickItem {
+    name: string;
     path: string;
     list?: Section[];
 }
