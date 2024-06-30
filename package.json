@@ -3,7 +3,7 @@
   "publisher": "jackiotyu",
   "displayName": "备忘清单-开发者快速参考 (Reference)",
   "description": "Reference 是一组由开源社区贡献的备忘单集合，为开发者提供了精美的布局和快速参考信息",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.60.0"
   },
