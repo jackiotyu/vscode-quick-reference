@@ -83,9 +83,14 @@ class Panel {
         const filepath = path.join(this.context.extensionPath, 'dist/reference', docPath);
         const dirPath = path.dirname(filepath);
         const html = fs.readFileSync(filepath, 'utf8');
-        return this.updateHtmlForWebview(html, this.panel.webview, dirPath);
+        if (/data-replaced/.test(html)) return html;
+        const content = this.updateHtmlForWebview(html, this.panel.webview, dirPath);
+        fs.writeFile(filepath, content, { encoding: 'utf8' }, () => {});
+        return content;
     }
     private updateHtmlForWebview(html: string, webview: vscode.Webview, baseDir: string) {
+        html = html.replace(/<script src="https:\/\/giscus\.app.*?>/, '');
+
         html = html.replace(/id="([^"]*[\u4E00-\u9FA5]+[^"]*)"/g, function (match, p1) {
             const encodedId = encodeURIComponent(p1);
             return `id="${encodedId}"`;
@@ -121,7 +126,7 @@ class Panel {
             if (href.startsWith('#')) return `${text}#${encodeURIComponent(href.slice(1))}"`;
             if (href.startsWith('../index.html')) href = 'index.html';
             let cleanHref = href.split('?')[0];
-            if(cleanHref.startsWith('./') && !cleanHref.includes('/docs/')) {
+            if (cleanHref.startsWith('./') && !cleanHref.includes('/docs/')) {
                 cleanHref = path.join('docs', cleanHref);
             }
             const commandUri = vscode.Uri.parse(
@@ -129,6 +134,8 @@ class Panel {
             );
             return `${text + commandUri}"`;
         });
+        // 添加标记，避免重复替换文本
+        html = html.replace('</body>', '<div data-replaced></div></body>');
         return html;
     }
     dispose() {
