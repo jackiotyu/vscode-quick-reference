@@ -120,7 +120,7 @@
           },
           "QuickReference.webview.keepOne": {
             "type": "boolean",
-            "default": false,
+            "default": true,
             "markdownDescription": "只保留一个备忘清单视图"
           }
         }

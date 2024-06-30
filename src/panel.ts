@@ -3,6 +3,7 @@ import { WebviewMsg } from '@/type';
 import fs from 'fs';
 import path from 'path';
 import { Commands, Config, APP_NAME } from './constants';
+import { RefDataCache } from '@/utils';
 
 class Panel {
     private panel: vscode.WebviewPanel;
@@ -10,6 +11,7 @@ class Panel {
     private hash: string = '';
     private baseUrl: string = '';
     private _alive = true;
+    private titleMap = new Map<string, string>();
     constructor(
         private context: vscode.ExtensionContext,
         docPath: string = '',
@@ -50,21 +52,32 @@ class Panel {
         this.panel.onDidDispose(() => {
             this._alive = false;
         });
+        RefDataCache.list.then((list) => {
+            this.titleMap = new Map(list.map((item) => [item.path, item.name]));
+        });
     }
     public get alive() {
         return this._alive;
     }
     public update(docPath: string, title: string = '') {
-        this.panel.title = title ? `备忘清单 - ${title}` : '备忘清单';
-        const [baseUrl, hash] = docPath.split('#');
+        const [baseUrl = '', hash = ''] = docPath.split('#');
         const changeHash = baseUrl === this.baseUrl && hash !== this.hash;
         this.hash = hash;
         this.baseUrl = baseUrl;
+        this.panel.title = title ? `备忘清单 - ${title}` : '备忘清单';
+        !title && this.changeTitleByDocPath(baseUrl);
         if (changeHash) {
             this.panel.webview.postMessage({ method: 'getHash', data: { hash: this.hash } });
         } else {
             this.panel.webview.html = this.getHtmlContent(baseUrl || 'index.html');
         }
+    }
+    private changeTitleByDocPath(docPath: string) {
+        if (!docPath) return;
+        docPath = docPath.replace('../', '').replace('./', '');
+        const title = this.titleMap.get(docPath);
+        if (!title) return;
+        this.panel.title = `备忘清单 - ${title}`;
     }
     private getHtmlContent(docPath: string) {
         const filepath = path.join(this.context.extensionPath, 'dist/reference', docPath);
