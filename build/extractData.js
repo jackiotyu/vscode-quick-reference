@@ -27,7 +27,7 @@ function extractGroup() {
     const data = fs.readFileSync(filePath, 'utf8');
 
     // 正则表达式匹配##和<!--rehype:class=home-card-->之间的内容
-    const regex = /##\s*(.+?)\n([\s\S]*?)<!--rehype:class=home-card-->/g;
+    const regex = /##\s*([^]*?)\n([^]*?)<!--rehype:class=home-card-->/g;
     const linkRegex = /\[([^\]]+)\]\(([^)]+)\)(<!--rehype:.*?-->)/g;
     const iconReg = /docs\/(.*?)\.md/;
     const colorReg = /style=background:\s*(rgb\([^)]*\));/;
