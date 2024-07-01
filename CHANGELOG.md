@@ -3,6 +3,11 @@
 <!-- All notable changes to the "quick-reference" extension will be documented in this file. -->
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [0.0.9] - 2024-07-01
+
+- 去掉giscus、缓存替换过的内容
+- 修复文档内搜索跳转、优化tooltip
+
 ## [0.0.8] - 2024-06-30
 
 - 使用官方图标展示
