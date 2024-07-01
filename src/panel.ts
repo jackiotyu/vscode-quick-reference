@@ -15,7 +15,7 @@ class Panel {
     constructor(
         private context: vscode.ExtensionContext,
         docPath: string = '',
-        title?: string,
+        title: string = '',
     ) {
         this.panel = vscode.window.createWebviewPanel(Panel.id, title ? `备忘清单 - ${title}` : '备忘清单', {
             viewColumn: vscode.ViewColumn.One,

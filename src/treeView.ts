@@ -11,7 +11,7 @@ export class RefItem extends vscode.TreeItem {
     constructor(data: RefData) {
         super(data.name, vscode.TreeItemCollapsibleState.Collapsed);
         this.items = data.sections;
-        this.tooltip = data.intro;
+        this.tooltip = new vscode.MarkdownString(data.intro, true);
         this.path = data.path;
         this.name = data.name;
         this.contextValue = TreeItemId.ref;
@@ -49,9 +49,10 @@ class GroupItem extends vscode.TreeItem {
     }
     private setTooltip() {
         const tooltip = new vscode.MarkdownString("", true);
-        tooltip.appendMarkdown(`### ${this.name}\n\n`);
+        tooltip.appendMarkdown(`| ${this.name} |\n`);
+        tooltip.appendMarkdown(`| :-------- |\n`);
         this.items.forEach(item => {
-            tooltip.appendMarkdown(`* $(tag) \`${item.name}\`\n`);
+            tooltip.appendMarkdown(`| $(tag) ${item.name} |\n`);
         });
         this.tooltip = tooltip;
     }

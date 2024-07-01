@@ -77,12 +77,12 @@ const isHome = document.body.classList.contains('home');
 
 function handleOpenUrl(event) {
     event.preventDefault();
-    const target = event.target;
+    const target = event.currentTarget;
     vscode.postMessage({
         method: 'openUrl',
         data: {
             url: target.dataset.href,
-            title: target.dataset.title,
+            title: target.dataset.title || '',
             hash: target.dataset.hash,
         },
     });
@@ -175,7 +175,7 @@ function searchResult(value) {
             return `<mark>${txt}</mark>`;
         });
         const href = item.item.path;
-        const name = item.item.name;
+        const name = item.item.name || '';
         if (idx === 0) {
             activeIndex = idx;
             activeMenu = item.item;
@@ -209,10 +209,11 @@ function searchSectionsResult(idx = 0) {
         data.item.sections.forEach((item, idx) => {
             const label = item.t.replace(getValueReg(inputValue), (txt) => `<mark>${txt}</mark>`);
             const href = data.item.path;
+            const title = data.item.t || '';
             if (item.l < 3) {
-                sectionHTML += `<li><a href="#" data-href="${href}" data-title="${data.item.title}" data-hash="${item.a}" onclick="handleOpenUrl(event)">${label}</a><div>`;
+                sectionHTML += `<li><a href="#" data-href="${href}" data-title="${title}" data-hash="${item.a}" onclick="handleOpenUrl(event)">${label}</a><div>`;
             } else {
-                sectionHTML += `<a href="#" data-href="${href}" data-title="${data.item.title}" data-hash="${item.a}" onclick="handleOpenUrl(event)">${label}</a>`;
+                sectionHTML += `<a href="#" data-href="${href}" data-title="${title}" data-hash="${item.a}" onclick="handleOpenUrl(event)">${label}</a>`;
             }
             if (data.item.sections.length === idx + 1) {
                 sectionHTML += `</div></li>`;
