@@ -3,6 +3,10 @@
 <!-- All notable changes to the "quick-reference" extension will be documented in this file. -->
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [0.0.10] - 2024-07-29
+
+- 同步 [reference](https://github.com/jaywcjlove/reference.git) 远程代码，版本ec6d167
+
 ## [0.0.9] - 2024-07-01
 
 - 去掉giscus、缓存替换过的内容
