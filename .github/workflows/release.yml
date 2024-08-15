@@ -1,0 +1,51 @@
+name: Release VSCode Extension
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # 仅在推送符合 semver 格式的标签时触发
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Package Extension
+        run: npx vsce package
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Extension Package to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./quick-reference-*.vsix  # 文件路径使用通配符
+          asset_name: quick-reference-${{ github.ref_name }}.vsix  # 使用标签名生成文件名
+          asset_content_type: application/vsix
+
+      - name: Publish Extension to VSCode Marketplace
+        uses: lannonbr/vsce-action@3.0.0
+        with:
+          args: publish
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
