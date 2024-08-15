@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 1
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -22,14 +25,40 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm install -g @vscode/vsce
+          pnpm install
 
-      - name: Package Extension
-        run: pnpm exec vsce package --no-dependencies
+      - name: Read version from package.json
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Publish Extension to VSCode Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
+        run: vsce publish --no-dependencies
+
+      - name: List generated files
+        run: ls -l
+
+      - name: Rename VSIX file if needed
+        run: |
+          # Use pattern matching to find the VSIX file
+          VSIX_FILE=$(ls quick-reference-*.vsix)
+          echo "Found VSIX file: $VSIX_FILE"
+
+          # Rename the file if the name does not match the expected version
+          if [ "$VSIX_FILE" != "quick-reference-${{ env.VERSION }}.vsix" ]; then
+            mv "$VSIX_FILE" "quick-reference-${{ env.VERSION }}.vsix"
+          else
+            echo "VSIX file already has the correct name."
+          fi
 
       - name: Create GitHub Release
         id: create_release
@@ -44,13 +73,10 @@ jobs:
 
       - name: Upload Extension Package to Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./quick-reference-*.vsix
-          asset_name: quick-reference-${{ github.ref_name }}.vsix
+          asset_path: ./quick-reference-${{ env.VERSION }}.vsix
+          asset_name: quick-reference-${{ env.VERSION }}.vsix
           asset_content_type: application/vsix
-
-      - name: Publish Extension to VSCode Marketplace
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: pnpm exec vsce publish --no-dependencies

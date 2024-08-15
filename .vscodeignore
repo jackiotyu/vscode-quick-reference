@@ -5,6 +5,7 @@ node_modules/**
 src/**
 build/**
 .gitignore
+.gitmodules
 .yarnrc
 webpack.config.js
 vsc-extension-quickstart.md
@@ -13,3 +14,9 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+packages/**
+scripts/**
+build/**
+.github/**
+pnpm-workspace.yaml
+pnpm-lock.yaml
