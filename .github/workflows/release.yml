@@ -10,19 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
         with:
-          node-version: '18'
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Package Extension
-        run: npx vsce package
+        run: pnpm exec vsce package --no-dependencies
 
       - name: Create GitHub Release
         id: create_release
@@ -39,13 +46,11 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./quick-reference-*.vsix  # 文件路径使用通配符
-          asset_name: quick-reference-${{ github.ref_name }}.vsix  # 使用标签名生成文件名
+          asset_path: ./quick-reference-*.vsix
+          asset_name: quick-reference-${{ github.ref_name }}.vsix
           asset_content_type: application/vsix
 
       - name: Publish Extension to VSCode Marketplace
-        uses: lannonbr/vsce-action@3.0.0
-        with:
-          args: "publish -p $VSCE_TOKEN"
         env:
-          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: pnpm exec vsce publish --no-dependencies
