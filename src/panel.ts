@@ -158,5 +158,8 @@ export class PanelManager {
         }
         this.lastPanel = new Panel(this.context, docPath, title);
     }
-    dispose() {}
+    dispose() {
+        this.lastPanel?.dispose();
+        this.lastPanel = void 0;
+    }
 }
