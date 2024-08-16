@@ -30,13 +30,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pnpm install -g @vscode/vsce
           pnpm install
 
       - name: Publish Extension to VSCode Marketplace
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
-        run: vsce publish --no-dependencies
+        run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }} --no-dependencies
+
+      - name: Publish Extension to OVSX
+        run: npx ovsx publish -p ${{ secrets.OVSX_TOKEN }} --no-dependencies
 
       - name: Create GitHub Release
         id: create_release
