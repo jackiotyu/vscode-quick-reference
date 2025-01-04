@@ -99,7 +99,11 @@ class Panel {
             return `id="${encodedId}"`;
         });
 
-        html = html.replace(/<link[^>]*\s+rel="stylesheet"[^>]*\s+href="([^"]+)(\?[^"]*)?"/g, (match, href) => {
+        html = html.replace(/<meta rel="apple-touch-icon"[^>]*>/g, '');
+        html = html.replace(/<link rel="icon"[^>]*>/g, '');
+
+        html = html.replace(/<link[^>]*\s+href="([^"]+)"[^>]*\s+rel="stylesheet"|<link[^>]*\s+rel="stylesheet"[^>]*\s+href="([^"]+)"/g, (match, href1, href2) => {
+            const href = href1 || href2;
             if (href.startsWith('http') || href.startsWith('https')) return match;
             const cleanHref = href.split('?')[0];
             const stylePathOnDisk = vscode.Uri.file(path.join(baseDir, cleanHref));

@@ -1,34 +1,41 @@
 const vscode = acquireVsCodeApi();
 
 /** ==========anchor============== */
+const anchorHandler = () => {
+    anchorPoint();
+    updateAnchor();
+};
 if ('onhashchange' in window && (typeof document.documentMode === 'undefined' || document.documentMode === 8)) {
-    window.addEventListener('hashchange', function () {
-        anchorPoint();
-        updateAnchor();
-    });
+    window.addEventListener('hashchange', anchorHandler);
 }
 window.addEventListener('message', event => {
     const { method, data } = event.data || {};
     if(method === "updateHash") {
-        if(data.hash) window.location.hash = `#${data.hash}`;
+        if(data.hash) window.location.hash = `#${encodeURIComponent(data.hash)}`;
         else window.scrollTo(0, 0);
     }
 });
-document.addEventListener('DOMContentLoaded', () => {
-    vscode.postMessage({
-        method: 'getHash',
-        data: {},
+function onDomReady(callback) {
+    document.addEventListener('readystatechange', function changeHandler(event) {
+        if (event.target.readyState !== 'complete') return;
+        callback();
+        document.removeEventListener('readystatechange', changeHandler);
     });
+}
+onDomReady(() => {
+    window.scrollTo(0, 0);
+    vscode.postMessage({ method: 'getHash',data: {} });
+    setTimeout(anchorHandler, 60);
 });
 function anchorPoint() {
     const hash = window.location.hash?.replace(/^#/, '') || '';
     const elm = document.getElementById(hash);
     Array.from(document.querySelectorAll('.h2wrap-body .wrap')).forEach((elm) => elm.classList.remove('active'));
-    if (elm?.tagName === 'H3') {
-        const parent = elm?.parentElement?.parentElement;
-        parent?.classList.add('active');
-        parent?.scrollIntoView(true);
-    }
+    if(!elm || elm.tagName !== 'H3') return;
+    const parent = elm.parentElement?.parentElement;
+    if(!parent) return;
+    parent.classList.add('active');
+    parent.scrollIntoView(true);
 }
 anchorPoint();
 function updateAnchor(element) {
@@ -41,8 +48,6 @@ function updateAnchor(element) {
         anchor.classList.add('is-active-link');
     }
 }
-// toc 定位
-updateAnchor();
 const anchorAll = document.querySelectorAll('.menu-tocs .menu-modal a.tocs-link');
 const sectionAnchorAll = document.querySelectorAll(".h3wrap > h3 > a");
 [...anchorAll, ...sectionAnchorAll].forEach((item) => {
