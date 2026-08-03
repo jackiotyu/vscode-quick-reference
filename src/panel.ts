@@ -102,14 +102,17 @@ class Panel {
         html = html.replace(/<meta rel="apple-touch-icon"[^>]*>/g, '');
         html = html.replace(/<link rel="icon"[^>]*>/g, '');
 
-        html = html.replace(/<link[^>]*\s+href="([^"]+)"[^>]*\s+rel="stylesheet"|<link[^>]*\s+rel="stylesheet"[^>]*\s+href="([^"]+)"/g, (match, href1, href2) => {
-            const href = href1 || href2;
-            if (href.startsWith('http') || href.startsWith('https')) return match;
-            const cleanHref = href.split('?')[0];
-            const stylePathOnDisk = vscode.Uri.file(path.join(baseDir, cleanHref));
-            const styleUri = webview.asWebviewUri(stylePathOnDisk);
-            return `<link rel="stylesheet" href="${styleUri}"`;
-        });
+        html = html.replace(
+            /<link[^>]*\s+href="([^"]+)"[^>]*\s+rel="stylesheet"|<link[^>]*\s+rel="stylesheet"[^>]*\s+href="([^"]+)"/g,
+            (match, href1, href2) => {
+                const href = href1 || href2;
+                if (href.startsWith('http') || href.startsWith('https')) return match;
+                const cleanHref = href.split('?')[0];
+                const stylePathOnDisk = vscode.Uri.file(path.join(baseDir, cleanHref));
+                const styleUri = webview.asWebviewUri(stylePathOnDisk);
+                return `<link rel="stylesheet" href="${styleUri}"`;
+            },
+        );
 
         html = html.replace(/<script[^>]*\s+src="([^"]+)(\?[^"]*)?"/g, (match, src) => {
             if (src.startsWith('http') || src.startsWith('https')) return match;
@@ -119,12 +122,13 @@ class Panel {
             return `<script src="${scriptUri}"`;
         });
 
-        html = html.replace(/<img[^>]*\s+src="([^"]+)(\?[^"]*)?"/g, (match, src) => {
+        html = html.replace(/(<img\b[^>]*\bsrc=")([^"]+)(")/g, (match, prefix, src, suffix) => {
             if (src.startsWith('http') || src.startsWith('https')) return match;
             const cleanSrc = src.split('?')[0];
-            const imgPathOnDisk = vscode.Uri.file(path.join(baseDir, cleanSrc));
+            const imgPath = path.join(baseDir, cleanSrc);
+            const imgPathOnDisk = vscode.Uri.file(imgPath);
             const imgUri = webview.asWebviewUri(imgPathOnDisk);
-            return `<img src="${imgUri}"`;
+            return prefix + imgUri + suffix;
         });
 
         html = html.replace(/(<a[^>]*\s+href=")([^"]+)(\?[^"]*)?"/g, (match, text, href, post) => {

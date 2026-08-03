@@ -1,3 +1,6 @@
 packages:
   # packages下所有的子包
   - 'packages/*'
+allowBuilds:
+  '@vscode/vsce-sign': true
+  keytar: true

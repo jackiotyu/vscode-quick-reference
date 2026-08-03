@@ -3,6 +3,10 @@
 <!-- All notable changes to the "quick-reference" extension will be documented in this file. -->
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## [1.1.0] - 2026-08-03
+
+- 同步 [reference](https://github.com/jaywcjlove/reference.git) 远程代码，版本2712d636
+
 ## [1.0.0] - 2025-01-04
 
 - 同步 [reference](https://github.com/jaywcjlove/reference.git) 远程代码，版本b414893b

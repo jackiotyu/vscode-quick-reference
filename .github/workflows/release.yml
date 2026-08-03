@@ -1,66 +1,51 @@
 name: Release VSCode Extension
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'  # 仅在推送符合 semver 格式的标签时触发
+    push:
+        tags:
+            - 'v*.*.*' # 仅在推送符合 semver 格式的标签时触发
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
+    release:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 1
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  submodules: true
+                  fetch-depth: 1
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          version: 9
-          run_install: false
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v6
+              with:
+                  run_install: false
+                  cache: true
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'pnpm'
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '24.x'
+                  registry-url: 'https://registry.npmjs.org'
+                  cache: 'pnpm'
 
-      - name: Cache pnpm store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
+            - name: Install dependencies
+              run: |
+                  pnpm install
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
+            - name: Publish Extension to VSCode Marketplace
+              run: pnpm exec vsce publish -p ${{ secrets.VSCE_TOKEN }} --no-dependencies
 
-      - name: Install dependencies
-        run: |
-          pnpm install
+            - name: Publish Extension to OVSX
+              run: pnpm exec ovsx publish -p ${{ secrets.OVSX_TOKEN }} --no-dependencies
 
-      - name: Publish Extension to VSCode Marketplace
-        run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }} --no-dependencies
-
-      - name: Publish Extension to OVSX
-        run: npx ovsx publish -p ${{ secrets.OVSX_TOKEN }} --no-dependencies
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: false
-          prerelease: false
+            - name: Create GitHub Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: ${{ github.ref }}
+                  draft: false
+                  prerelease: false
